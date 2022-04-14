@@ -6,56 +6,61 @@
 /*   By: fmoreira <fmoreira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:10:46 by fmoreira          #+#    #+#             */
-/*   Updated: 2022/04/13 21:29:54 by fmoreira         ###   ########.fr       */
+/*   Updated: 2022/04/14 20:55:06 by fmoreira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-//char *str;
-
 void ft_welcome(int *count, int *value)
 {
 	if (*count == 1)
-		value = value + 1;
-	if (*count == 2)
-		value = value + 2;
-	if (*count == 3)
-		value = value + 4;
-	if (*count == 4)
-		value = value + 8;
-	if (*count == 5)
-		value = value + 16;
-	if (*count == 6)
-		value = value + 32;
-	if (*count == 7)
-		value = value + 64;
-	if (*count == 8)
-		value = value + 128;
+		*value = *value + 1;
+	else if (*count == 2)
+		*value = *value + 2;
+	else if (*count == 3)
+		*value = *value + 4;
+	else if (*count == 4)
+		*value = *value + 8;
+	else if (*count == 5)
+		*value = *value + 16;
+	else if (*count == 6)
+		*value = *value + 32;
+	else if (*count == 7)
+		*value = *value + 64;
+	else if (*count == 8)
+		*value = *value + 128;
+	//printf("'char': %d %c\n", *value, *value);
 }
 
 void ft_handler(int signum)
 {
 	static int count;
-	int naosei;
 	int value;
 	
-	if (!count)
-		count = 1;
-	if (!value)
+	if(!count || count > 8)
+	{
 		value = 0;
+		count = 1;
+	}
+	/*if(!value || value > 127)
+		value = 0; */
+	//printf("count: %d\n", count);
 	if(signum == 10)
 	{
-		ft_welcome(&count, &value);
-		count++;
+		//printf("sigusr1\n");
+		count = count + 1;
 	}
-	if(signum == 12)
-		count++;
-	if (count == 8);
+	else if(signum == 12)
+	{
+		//printf("sigusr2\n");
+		ft_welcome(&count, &value);
+		count = count + 1;
+	}
+	if(count >= 8)
 		{
-			printf("valor de value: %d\n", value);
 			ft_putchar_fd((unsigned char)value, 1);
-			count = 1;
+			count = 0;
 		}
 }
 
