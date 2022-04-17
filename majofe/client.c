@@ -6,7 +6,7 @@
 /*   By: fmoreira <fmoreira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/16 01:17:29 by jvictor-          #+#    #+#             */
-/*   Updated: 2022/04/17 01:43:44 by fmoreira         ###   ########.fr       */
+/*   Updated: 2022/04/17 03:03:31 by fmoreira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 static int	g_bit_send;
 
-void	confirm_handler(int sig)
+void	ft_confirm_handler(int signum)
 {
 	g_bit_send = 1;
 	(void)sig;
 }
 
-void	send_signal(int bit, int pid)
+void	ft_send_signal(int bit, int pid)
 {
 	if (bit == 0)
 	{
@@ -43,29 +43,29 @@ void	send_signal(int bit, int pid)
 	g_bit_send = 0;
 }
 
-void	convert(int c, int pid)
+void	ft_convert(int c, int pid)
 {
-	t_byte_struct	byte_char;
+	t_byte_struct	fake_byte;
 
-	*(unsigned char *)&byte_char = (unsigned char)c;
-	send_signal(byte_char.b1, pid);
-	send_signal(byte_char.b2, pid);
-	send_signal(byte_char.b3, pid);
-	send_signal(byte_char.b4, pid);
-	send_signal(byte_char.b5, pid);
-	send_signal(byte_char.b6, pid);
-	send_signal(byte_char.b7, pid);
-	send_signal(byte_char.b8, pid);
+	*(unsigned char *)&fake_byte = (unsigned char)c;
+	ft_send_signal(fake_byte.bit1, pid);
+	ft_send_signal(fake_byte.bit2, pid);
+	ft_send_signal(fake_byte.bit3, pid);
+	ft_send_signal(fake_byte.bit4, pid);
+	ft_send_signal(fake_byte.bit5, pid);
+	ft_send_signal(fake_byte.bit6, pid);
+	ft_send_signal(fake_byte.bit7, pid);
+	ft_send_signal(fake_byte.bit8, pid);
 }
 
-void	send_zero(int pid)
+void	ft_send_zero(int pid)
 {
 	int	i;
 
 	i = 0;
 	while (i < 8)
 	{
-		send_signal(0, pid);
+		ft_send_signal(0, pid);
 		i++;
 	}
 }
@@ -83,15 +83,15 @@ int	main(int argc, char **argv)
 	}
 	pid = ft_atoi(*(argv + 1));
 	ft_bzero(&sa, sizeof(struct sigaction));
-	sa.sa_handler = confirm_handler;
+	sa.sa_handler = ft_confirm_handler;
 	if (sigaction(SIGUSR2, &sa, NULL))
 		exit(1);
 	i = 0;
 	while (argv[2][i])
 	{
-		convert((int)argv[2][i], pid);
+		ft_convert((int)argv[2][i], pid);
 		i++;
 	}
-	send_zero(pid);
+	ft_send_zero(pid);
 	return (0);
 }

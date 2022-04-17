@@ -6,7 +6,7 @@
 /*   By: fmoreira <fmoreira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:10:46 by fmoreira          #+#    #+#             */
-/*   Updated: 2022/04/16 03:40:50 by fmoreira         ###   ########.fr       */
+/*   Updated: 2022/04/17 00:17:28 by fmoreira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 void ft_welcome(int *count, int *value, char bit)
 {
+	//int x;
+
+	//x = 0;
 	if (*count == 1 && bit == 1)
 	{
 		*value = 0;
@@ -33,12 +36,17 @@ void ft_welcome(int *count, int *value, char bit)
 		*value = *value + 64;
 	else if (*count == 8)
 	{
-		ft_putnbr_fd((int)*value, 1);
-		write(1, " ", 1);
-		ft_putchar_fd((unsigned char )*value, 1);
+		//ft_putnbr_fd((int)bit, 1);
+		//write(1, " = ", 3);
+		ft_putchar_fd((char )*value, 1);
+		//write(1, "\n", 1);
 		*count = 0;
 		*value = 0;
+		//x = 1;
+		
 	}
+	//if (x != 1)
+	//	ft_putnbr_fd((int)bit, 1);
 	//ft_putnbr_fd(*count, 1);
 	//write(1, "\n", 1);
 }
@@ -70,8 +78,8 @@ int main()
 {
 	struct sigaction act;
 	int pid;
-    pid = getpid();
-
+    
+	pid = getpid();
 	write(1, "PID: ", 5);
 	ft_putnbr_fd(pid, 1);
 	write(1, "\n", 1);

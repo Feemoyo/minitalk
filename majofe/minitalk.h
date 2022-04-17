@@ -6,7 +6,7 @@
 /*   By: fmoreira <fmoreira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 02:10:53 by jvictor-          #+#    #+#             */
-/*   Updated: 2022/04/17 01:22:42 by fmoreira         ###   ########.fr       */
+/*   Updated: 2022/04/17 03:12:24 by fmoreira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,25 @@
 
 typedef struct byte
 {
-	unsigned char	b1:1;
-	unsigned char	b2:1;
-	unsigned char	b3:1;
-	unsigned char	b4:1;
-	unsigned char	b5:1;
-	unsigned char	b6:1;
-	unsigned char	b7:1;
-	unsigned char	b8:1;
+	unsigned char	bit1:1;
+	unsigned char	bit2:1;
+	unsigned char	bit3:1;
+	unsigned char	bit4:1;
+	unsigned char	bit5:1;
+	unsigned char	bit6:1;
+	unsigned char	bit7:1;
+	unsigned char	bit8:1;
 }	t_byte_struct;
 
-void	set_bit(t_byte_struct *c, int i, int bit);
-void	check_end_of_string(unsigned char *c);
-void	signal_handler(int num, siginfo_t *info, void *ctx);
-void	confirm_handler(int sig);
+void	ft_set_bit(t_byte_struct *c, int i, int bit);
+void	ft_check_end_of_string(unsigned char *c);
+void	ft_signal_handler(int num, siginfo_t *info, void *ctx);
+void	ft_onfirm_handler(int sig);
 int		ft_atoi(const char *nptr);
 void	ft_bzero(void *s, size_t n);
-void	send_signal(int bit, int pid);
-void	convert(int c, int pid);
-void	send_zero(int pid);
+void	ft_send_signal(int bit, int pid);
+void	ft_convert(int c, int pid);
+void	ft_send_zero(int pid);
 void	ft_putnbr_fd(int n, int fd);
 void	ft_usage(void);
 #endif
