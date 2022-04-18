@@ -6,89 +6,81 @@
 /*   By: fmoreira <fmoreira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/06 15:10:46 by fmoreira          #+#    #+#             */
-/*   Updated: 2022/04/17 00:17:28 by fmoreira         ###   ########.fr       */
+/*   Updated: 2022/04/18 13:20:19 by fmoreira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void ft_welcome(int *count, int *value, char bit)
+void	ft_set_bit(t_byte_struct *c, int i, int bit)
 {
-	//int x;
-
-	//x = 0;
-	if (*count == 1 && bit == 1)
-	{
-		*value = 0;
-		*value = *value + 1;
-	}
-	else if (*count == 2 && bit == 1) //01100001 1 + 32 + 64
-		*value = *value + 2;
-	else if (*count == 3 && bit == 1)
-		*value = *value + 4;
-	else if (*count == 4 && bit == 1)
-		*value = *value + 8;
-	else if (*count == 5 && bit == 1)
-		*value = *value + 16;
-	else if (*count == 6 && bit == 1)
-		*value = *value + 32;
-	else if (*count == 7 && bit == 1)
-		*value = *value + 64;
-	else if (*count == 8)
-	{
-		//ft_putnbr_fd((int)bit, 1);
-		//write(1, " = ", 3);
-		ft_putchar_fd((char )*value, 1);
-		//write(1, "\n", 1);
-		*count = 0;
-		*value = 0;
-		//x = 1;
-		
-	}
-	//if (x != 1)
-	//	ft_putnbr_fd((int)bit, 1);
-	//ft_putnbr_fd(*count, 1);
-	//write(1, "\n", 1);
+	if (bit == 0)
+		c->bit1 = i;
+	else if (bit == 1)
+		c->bit2 = i;
+	else if (bit == 2)
+		c->bit3 = i;
+	else if (bit == 3)
+		c->bit4 = i;
+	else if (bit == 4)
+		c->bit5 = i;
+	else if (bit == 5)
+		c->bit6 = i;
+	else if (bit == 6)
+		c->bit7 = i;
+	else if (bit == 7)
+		c->bit8 = i;
 }
 
-void ft_handler(int signum)
+void	ft_check_end_of_string(unsigned char *c)
 {
-	static int count;
-	static int value;
-	
-	if(signum == 10) // SIGUSR1 == 0
+	if (*c == '\0')
 	{
-		count = count + 1;
-		ft_welcome(&count, &value, 0);
+		write(1, "\n", 1);
 	}
-	else if(signum == 12) // SIGUSR2 == 1
-	{
-		count = count + 1;
-		ft_welcome(&count, &value, 1);
-	}
-	//kill(info->si_pid, SIGUSR1);
-	/*if(count > 7)
-		{
-			ft_putchar_fd((unsigned char)value, 1);
-			count = 0;
-		} */
 }
 
-int main()
+void	ft_signal_handler(int num, siginfo_t *info, void *ctx)
 {
-	struct sigaction act;
-	int pid;
-    
-	pid = getpid();
-	write(1, "PID: ", 5);
-	ft_putnbr_fd(pid, 1);
+	static t_byte_struct	c;
+	static int				count;
+
+	if (num == SIGUSR1)
+		ft_set_bit(&c, 0, count);
+	else if (num == SIGUSR2)
+		ft_set_bit(&c, 1, count);
+	if (count == 7)
+	{
+		count = 0;
+		write(1, (unsigned char *)&c, 1);
+		ft_check_end_of_string((unsigned char *)&c);
+	}
+	else
+		count++;
+	if (kill(info->si_pid, SIGUSR2))
+		exit (1);
+	(void)ctx;
+}
+
+int	main(void)
+{
+	struct sigaction	sa;
+	sigset_t			mask;
+
+	ft_bzero(&sa, sizeof(struct sigaction));
+	sigemptyset(&mask);
+	sigaddset(&mask, SIGUSR1);
+	sigaddset(&mask, SIGUSR2);
+	sa.sa_mask = mask;
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = ft_signal_handler;
+	if (sigaction(SIGUSR1, &sa, NULL))
+		exit (1);
+	if (sigaction(SIGUSR2, &sa, NULL))
+		exit (1);
+	ft_putnbr_fd(getpid(), 1);
 	write(1, "\n", 1);
-	act.sa_handler = &ft_handler;
-	sigemptyset(&act.sa_mask);
-	act.sa_flags = SA_SIGINFO;
-	sigaction(SIGUSR1, &act, NULL);
-	sigaction(SIGUSR2, &act, NULL);
-	while (42)
-		sleep(1);
-    return 0;
+	while (1)
+		pause();
+	return (0);
 }

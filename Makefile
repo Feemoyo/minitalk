@@ -1,19 +1,29 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
-all: server client
+U_NAME = utils.c
 
-server: server.c utils.c
-	$(CC) $(CFLAGS) server.c utils.c -o server
+OBJ = $(U_NAME:.c=.o)
+SERVER = server
+CLIENT = client
 
-client: client.c utils.c
-	$(CC) $(CFLAGS) client.c utils.c -o client
+all: $(SERVER) $(CLIENT)
+
+$(SERVER):$(OBJ) minitalk.h
+	$(CC) $(CFLAGS) $(SERVER).c $(OBJ) -o $(SERVER)
+
+$(CLIENT):$(OBJ) minitalk.h
+	$(CC) $(CFLAGS) $(CLIENT).c $(OBJ) -o $(CLIENT)
+
+%.o:%.c
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 clean:
-	rm -rf server client
+	$(RM) $(OBJ)
 
 fclean: clean
+	$(RM) $(SERVER) $(CLIENT)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re SERVER CLIENT

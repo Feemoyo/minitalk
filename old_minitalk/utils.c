@@ -6,7 +6,7 @@
 /*   By: fmoreira <fmoreira@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/13 19:49:32 by fmoreira          #+#    #+#             */
-/*   Updated: 2022/04/18 13:20:32 by fmoreira         ###   ########.fr       */
+/*   Updated: 2022/04/13 21:02:22 by fmoreira         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,6 @@ int	ft_atoi(const char *nptr)
 	return (j * np);
 }
 
-void	ft_bzero(void *s, size_t n)
-{
-	while (n-- > 0)
-		*(unsigned char *)s++ = '\0';
-}
-
 void	ft_putnbr_fd(int n, int fd)
 {
 	long int	i;
@@ -63,7 +57,7 @@ void	ft_putnbr_fd(int n, int fd)
 	write(fd, &n, sizeof(char));
 }
 
-void	ft_usage(void)
+void	ft_putchar_fd(char c, int fd)
 {
-	write(1, "\nUSAGE: ./client <PID> <MESSAGE>\n\n", 34);
+	write(fd, &c, sizeof(c));
 }
